@@ -115,19 +115,24 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// Load progress from localStorage
+	// Load progress from localStorage
 	function loadProgress() {
 		if (shouldReset()) {
 			console.log('Auto-reset at 7:00 MSK')
 			localStorage.removeItem('bpProgress')
 			counterButtons.forEach(btn => {
 				const counterId = btn.dataset.counter
+				// Reset ALL counters including online3h on auto-reset
 				counters[counterId] = 0
 				document.getElementById(counterId).textContent = counters[counterId]
 				localStorage.removeItem(`counter_${counterId}`)
 			})
 
 			checkboxes.forEach(checkbox => {
-				checkbox.checked = false
+				// Skip online3h since it doesn't have checkbox anymore
+				if (checkbox.id !== 'online3h') {
+					checkbox.checked = false
+				}
 			})
 			x2ServerToggle.checked = false
 			vipToggle.checked = false
@@ -154,7 +159,10 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (tasks) {
 					Object.keys(tasks).forEach(id => {
 						const cb = document.getElementById(id)
-						if (cb) cb.checked = tasks[id]
+						if (cb && id !== 'online3h') {
+							// Skip online3h
+							cb.checked = tasks[id]
+						}
 					})
 				}
 
@@ -219,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// Update total BP count
+	// Update total BP count
 	function updateTotalBP() {
 		let totalBP = 0
 		const isVIP = vipToggle.checked
@@ -231,10 +240,20 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		})
 
+		// Add BP for online3h based on counter value (each click adds BP)
+		if (counters['online3hCounter'] > 0) {
+			const baseBP = 2
+			let onlineBP = baseBP * counters['online3hCounter'] // Multiply by counter value
+			if (isX2Server) onlineBP *= 2
+			if (isVIP) onlineBP *= 2
+			totalBP += onlineBP
+		}
+
 		totalBPSpan.textContent = totalBP
 		saveProgress()
 	}
 
+	// Update BP displays for all tasks
 	// Update BP displays for all tasks
 	function updateBPDisplays() {
 		const isVIP = vipToggle.checked
@@ -248,6 +267,19 @@ document.addEventListener('DOMContentLoaded', () => {
 				bpDisplay.textContent = `${bp} BP`
 			}
 		})
+
+		// Update online3h BP display
+		const online3hTask = document.querySelector('[data-task-id="online3h"]')
+		if (online3hTask) {
+			const baseBP = 2
+			let onlineBP = baseBP
+			if (isX2Server) onlineBP *= 2
+			if (isVIP) onlineBP *= 2
+			const bpDisplay = online3hTask.querySelector('.bp')
+			if (bpDisplay) {
+				bpDisplay.textContent = `${onlineBP} BP`
+			}
+		}
 
 		updateTotalBP()
 	}
@@ -286,6 +318,28 @@ document.addEventListener('DOMContentLoaded', () => {
 		const target = parseInt(btn.dataset.target)
 		const checkboxId = btn.dataset.checkbox
 
+		// Special case for online3h - infinite counter that adds BP every time
+		if (counterId === 'online3hCounter') {
+			counters[counterId]++
+			document.getElementById(counterId).textContent = counters[counterId]
+
+			// Add BP every time
+			const baseBP = 2 // BP value for online3h
+			const isVIP = vipToggle.checked
+			const isX2Server = x2ServerToggle.checked
+			let dpToAdd = baseBP
+			if (isX2Server) dpToAdd *= 2
+			if (isVIP) dpToAdd *= 2
+
+			const currentDP = parseInt(dpInput.value) || 0
+			dpInput.value = currentDP + dpToAdd
+
+			saveProgress()
+			updateBPDisplays()
+			return
+		}
+
+		// Original logic for other counters
 		if (counters[counterId] < target) {
 			counters[counterId]++
 			document.getElementById(counterId).textContent = counters[counterId]
@@ -309,13 +363,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Reset all checkboxes and counters
 	function resetCheckboxes() {
 		checkboxes.forEach(checkbox => {
-			checkbox.checked = false
+			// Skip online3h since it doesn't have checkbox anymore
+			if (checkbox.id !== 'online3h') {
+				checkbox.checked = false
+			}
 		})
 		x2ServerToggle.checked = false
 		vipToggle.checked = false
 
 		counterButtons.forEach(btn => {
 			const counterId = btn.dataset.counter
+			// Reset ALL counters including online3h
 			counters[counterId] = 0
 			document.getElementById(counterId).textContent = counters[counterId]
 		})
