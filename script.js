@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Состояние таймеров
 	let userTimers = []
 	let timerIntervals = {}
+	let timerStartTimes = {}
 
 	// ========== СИСТЕМА ЗАДАНИЙ BP ==========
 
@@ -569,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				const timerCard = this.closest('.small-timer-card')
 				const timerId = timerCard.dataset.timerId
 
-				console.log('Start button clicked for timer:', timerId) // Debug
+				console.log('Start button clicked for timer:', timerId)
 
 				// Проверяем, предустановленный это таймер или пользовательский
 				if (presetTimers[timerId]) {
@@ -632,10 +633,19 @@ document.addEventListener('DOMContentLoaded', () => {
 			return
 		}
 
-		console.log('Starting timer:', timerId, timer) // Debug
+		console.log('Starting timer:', timerId, timer)
 
 		const startTime = Date.now()
 		const initialTime = timer.currentTime
+
+		timerStartTimes[timerId] = startTime
+
+		// Сохраняем время старта
+		if (!isPreset) {
+			saveTimersToStorage()
+		} else {
+			savePresetTimersToStorage()
+		}
 
 		timerIntervals[timerId] = setInterval(() => {
 			const elapsed = Math.floor((Date.now() - startTime) / 1000)
@@ -645,6 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (timer.currentTime <= 0) {
 				clearInterval(timerIntervals[timerId])
 				delete timerIntervals[timerId]
+				delete timerStartTimes[timerId]
 				timer.currentTime = 0
 				updateTimerDisplay(timerId)
 
@@ -664,6 +675,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		}, 1000)
 
 		updateTimerDisplay(timerId)
+
+		// Сохраняем состояние сразу после запуска
+		if (!isPreset) {
+			saveTimersToStorage()
+		} else {
+			savePresetTimersToStorage()
+		}
 	}
 
 	// Пауза пользовательского таймера
@@ -671,6 +689,26 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (timerIntervals[timerId]) {
 			clearInterval(timerIntervals[timerId])
 			delete timerIntervals[timerId]
+
+			// Обновляем текущее время при паузе
+			if (timerStartTimes[timerId]) {
+				const startTime = timerStartTimes[timerId]
+				const elapsed = Math.floor((Date.now() - startTime) / 1000)
+
+				let timer
+				if (presetTimers[timerId]) {
+					timer = presetTimers[timerId]
+				} else {
+					timer = userTimers.find(t => t.id === timerId)
+				}
+
+				if (timer) {
+					timer.currentTime = Math.max(0, timer.currentTime - elapsed)
+				}
+
+				delete timerStartTimes[timerId]
+			}
+
 			updateTimerDisplay(timerId)
 
 			// Сохраняем состояние для пользовательских таймеров
@@ -767,6 +805,20 @@ document.addEventListener('DOMContentLoaded', () => {
 			createdAt: timer.createdAt,
 		}))
 		localStorage.setItem('userTimers', JSON.stringify(timersData))
+
+		// Сохраняем время старта работающих таймеров
+		const runningTimers = {}
+		Object.keys(timerStartTimes).forEach(timerId => {
+			if (timerIntervals[timerId]) {
+				runningTimers[timerId] = {
+					startTime: timerStartTimes[timerId],
+					initialTime:
+						userTimers.find(t => t.id === timerId)?.currentTime ||
+						presetTimers[timerId]?.currentTime,
+				}
+			}
+		})
+		localStorage.setItem('runningTimers', JSON.stringify(runningTimers))
 	}
 
 	// Сохранение предустановленных таймеров в localStorage
@@ -778,6 +830,18 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		})
 		localStorage.setItem('presetTimers', JSON.stringify(presetTimersData))
+
+		// Сохраняем время старта работающих предустановленных таймеров
+		const runningTimers = {}
+		Object.keys(timerStartTimes).forEach(timerId => {
+			if (timerIntervals[timerId] && presetTimers[timerId]) {
+				runningTimers[timerId] = {
+					startTime: timerStartTimes[timerId],
+					initialTime: presetTimers[timerId].currentTime,
+				}
+			}
+		})
+		localStorage.setItem('runningPresetTimers', JSON.stringify(runningTimers))
 	}
 
 	// Загрузка таймеров из localStorage
@@ -858,6 +922,125 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
+	// Воспроизведение звука уведомления
+	function playNotificationSound() {
+		try {
+			const audioContext = new (window.AudioContext ||
+				window.webkitAudioContext)()
+			const oscillator = audioContext.createOscillator()
+			const gainNode = audioContext.createGain()
+
+			oscillator.connect(gainNode)
+			gainNode.connect(audioContext.destination)
+
+			oscillator.frequency.value = 800
+			oscillator.type = 'sine'
+
+			gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
+			gainNode.gain.exponentialRampToValueAtTime(
+				0.01,
+				audioContext.currentTime + 1
+			)
+
+			oscillator.start(audioContext.currentTime)
+			oscillator.stop(audioContext.currentTime + 1)
+		} catch (e) {
+			console.log('Audio context not supported:', e)
+		}
+	}
+
+	// Восстановление работающих таймеров после перезагрузки
+	function restoreRunningTimers() {
+		console.log('Restoring running timers...')
+
+		// Восстанавливаем предустановленные таймеры
+		const savedRunningPresetTimers = localStorage.getItem('runningPresetTimers')
+		if (savedRunningPresetTimers) {
+			try {
+				const runningTimers = JSON.parse(savedRunningPresetTimers)
+				Object.keys(runningTimers).forEach(timerId => {
+					const data = runningTimers[timerId]
+					const timer = presetTimers[timerId]
+
+					if (timer && data.startTime && data.initialTime) {
+						const elapsed = Math.floor((Date.now() - data.startTime) / 1000)
+						const remainingTime = Math.max(0, data.initialTime - elapsed)
+
+						console.log(
+							`Preset timer ${timerId}: elapsed ${elapsed}s, remaining ${remainingTime}s`
+						)
+
+						if (remainingTime > 0) {
+							timer.currentTime = remainingTime
+							console.log(
+								`Restoring preset timer: ${timer.name}, remaining: ${remainingTime}s`
+							)
+							startUserTimer(timerId, timer, true)
+						} else {
+							timer.currentTime = 0
+							console.log(
+								`Preset timer ${timerId} finished while page was closed`
+							)
+							if (Notification.permission === 'granted') {
+								new Notification(`Таймер "${timer.name}" завершен!`)
+							}
+							playNotificationSound()
+							savePresetTimersToStorage()
+						}
+					}
+				})
+			} catch (e) {
+				console.error('Error restoring running preset timers:', e)
+			}
+		}
+
+		// Восстанавливаем пользовательские таймеры
+		const savedRunningTimers = localStorage.getItem('runningTimers')
+		if (savedRunningTimers) {
+			try {
+				const runningTimers = JSON.parse(savedRunningTimers)
+				Object.keys(runningTimers).forEach(timerId => {
+					const data = runningTimers[timerId]
+					const timer = userTimers.find(t => t.id === timerId)
+
+					if (timer && data.startTime && data.initialTime) {
+						const elapsed = Math.floor((Date.now() - data.startTime) / 1000)
+						const remainingTime = Math.max(0, data.initialTime - elapsed)
+
+						console.log(
+							`User timer ${timerId}: elapsed ${elapsed}s, remaining ${remainingTime}s`
+						)
+
+						if (remainingTime > 0) {
+							timer.currentTime = remainingTime
+							console.log(
+								`Restoring user timer: ${timer.name}, remaining: ${remainingTime}s`
+							)
+							startUserTimer(timerId, timer)
+						} else {
+							timer.currentTime = 0
+							console.log(
+								`User timer ${timerId} finished while page was closed`
+							)
+							if (Notification.permission === 'granted') {
+								new Notification(`Таймер "${timer.name}" завершен!`)
+							}
+							playNotificationSound()
+							saveTimersToStorage()
+						}
+					}
+				})
+			} catch (e) {
+				console.error('Error restoring running user timers:', e)
+			}
+		}
+
+		// Перерисовываем таймеры после восстановления
+		setTimeout(() => {
+			renderTimers()
+		}, 100)
+	}
+
 	function initializeTimers() {
 		requestNotificationPermission()
 		loadTimersFromStorage()
@@ -865,7 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// Обработчики для кнопки добавления таймера
 		if (addTimerBtn) {
 			addTimerBtn.addEventListener('click', () => {
-				console.log('Add timer button clicked') // Debug
+				console.log('Add timer button clicked')
 				timerModal.style.display = 'flex'
 			})
 		}
@@ -899,23 +1082,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	// Восстановление работающих таймеров после перезагрузки
-	function restoreRunningTimers() {
-		// Восстанавливаем предустановленные таймеры
-		Object.keys(presetTimers).forEach(timerId => {
-			const timer = presetTimers[timerId]
-			if (timer.currentTime > 0 && timer.currentTime < timer.totalTime) {
-				startUserTimer(timerId, timer, true)
-			}
-		})
-
-		// Восстанавливаем пользовательские таймеры
-		userTimers.forEach(timer => {
-			if (timer.currentTime > 0 && timer.currentTime < timer.totalTime) {
-				startUserTimer(timer.id, timer)
-			}
-		})
-	}
 	// ========== ОСНОВНЫЕ ОБРАБОТЧИКИ СОБЫТИЙ ==========
 
 	checkboxes.forEach(checkbox => {
@@ -954,9 +1120,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		initializePagination()
 		initializeTimers()
 
+		// Восстанавливаем таймеры после небольшой задержки, чтобы все элементы успели отрендериться
 		setTimeout(() => {
 			restoreRunningTimers()
-		}, 1000)
+		}, 500)
 	}
 
 	initializeApp()
