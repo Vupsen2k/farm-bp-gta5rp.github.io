@@ -1,0 +1,1141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+	color: #e0e0e0;
+	font-family: 'Inter', sans-serif;
+	margin: 0;
+	padding: 10px;
+	height: 96vh;
+	overflow: hidden;
+}
+
+.container {
+	max-width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	background: rgba(42, 42, 62, 0.95);
+	backdrop-filter: blur(10px);
+	padding: 10px;
+	display: grid;
+	grid-template-rows: auto auto 1fr auto;
+	gap: 10px;
+	border-radius: 15px;
+	border: 1px solid rgba(255, 98, 0, 0.2);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+	position: relative;
+}
+
+/* Пагинация */
+.pagination {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 10px;
+	border-bottom: 2px solid rgba(255, 98, 0, 0.3);
+	padding-bottom: 10px;
+}
+
+.page-btn {
+	background: rgba(255, 98, 0, 0.1);
+	border: 1px solid rgba(255, 98, 0, 0.3);
+	color: #ff6200;
+	border-radius: 8px;
+	padding: 8px 16px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	flex: 1;
+	text-align: center;
+}
+
+.page-btn:hover {
+	background: rgba(255, 98, 0, 0.2);
+	transform: translateY(-2px);
+}
+
+.page-btn.active {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	color: white;
+	box-shadow: 0 4px 15px rgba(255, 98, 0, 0.3);
+}
+
+/* Страницы */
+.page {
+	display: none;
+	height: 100%;
+	overflow: hidden;
+}
+
+.page.active {
+	display: grid;
+	gap: 10px;
+	height: 100%;
+}
+
+#tasks-page.active {
+	grid-template-rows: auto auto 1fr auto;
+}
+
+#timers-page.active {
+	grid-template-rows: auto 1fr;
+}
+
+h1 {
+	color: #ff6200;
+	text-align: center;
+	margin: 0;
+	font-size: 1.5em;
+	font-weight: 700;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+	letter-spacing: -0.5px;
+}
+
+.header-controls {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+.toggles {
+	display: flex;
+	gap: 15px;
+}
+
+.toggles label {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	padding: 5px 10px;
+	background: rgba(255, 98, 0, 0.1);
+	border-radius: 8px;
+	border: 1px solid rgba(255, 98, 0, 0.3);
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-weight: 500;
+	font-size: 0.8em;
+}
+
+.toggles label:hover {
+	background: rgba(255, 98, 0, 0.2);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(255, 98, 0, 0.2);
+}
+
+.toggles input[type='checkbox'] {
+	width: 14px;
+	height: 14px;
+	accent-color: #ff6200;
+	cursor: pointer;
+	transform: scale(1.1);
+}
+
+.settings-btn {
+	background: rgba(255, 98, 0, 0.1);
+	border: 1px solid rgba(255, 98, 0, 0.3);
+	color: #ff6200;
+	border-radius: 8px;
+	padding: 5px 10px;
+	cursor: pointer;
+	font-size: 0.8em;
+	font-weight: 500;
+	transition: all 0.3s ease;
+}
+
+.settings-btn:hover {
+	background: rgba(255, 98, 0, 0.2);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(255, 98, 0, 0.2);
+}
+
+.tasks-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	overflow: hidden;
+	height: 100%;
+}
+
+.task-column {
+	overflow-y: auto;
+	padding-right: 5px;
+}
+
+.task-section h2 {
+	color: #ff6200;
+	margin: 5px 0;
+	font-size: 1em;
+	font-weight: 600;
+	position: sticky;
+	top: 0;
+	background: linear-gradient(
+		135deg,
+		rgba(42, 42, 62, 0.95) 0%,
+		rgba(42, 42, 62, 0.98) 100%
+	);
+	padding: 8px 0;
+	backdrop-filter: blur(5px);
+	border-bottom: 2px solid rgba(255, 98, 0, 0.3);
+	z-index: 10;
+}
+
+.task {
+	display: flex;
+	align-items: center;
+	padding: 6px 8px;
+	margin-bottom: 4px;
+	background: linear-gradient(
+		135deg,
+		rgba(51, 51, 70, 0.8) 0%,
+		rgba(45, 45, 65, 0.9) 100%
+	);
+	border-radius: 8px;
+	font-size: 0.85em;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
+}
+
+.task::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 98, 0, 0.1),
+		transparent
+	);
+	transition: left 0.5s ease;
+}
+
+.task:hover::before {
+	left: 100%;
+}
+
+.task:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+	border-color: rgba(255, 98, 0, 0.4);
+	background: linear-gradient(
+		135deg,
+		rgba(60, 60, 80, 0.9) 0%,
+		rgba(55, 55, 75, 0.95) 100%
+	);
+}
+
+.task input[type='checkbox'] {
+	margin-right: 8px;
+	accent-color: #ff6200;
+	min-width: 14px;
+	width: 14px;
+	height: 14px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.task input[type='checkbox']:hover {
+	transform: scale(1.2);
+}
+
+.task label {
+	flex-grow: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-weight: 400;
+	cursor: pointer;
+	transition: color 0.3s ease;
+}
+
+.task:hover label {
+	color: #ffffff;
+}
+
+.bp {
+	color: #ff6200;
+	font-weight: 600;
+	margin-left: 6px;
+	min-width: 35px;
+	text-align: right;
+	font-size: 0.8em;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.counter {
+	display: flex;
+	align-items: center;
+	margin-left: 6px;
+	font-size: 0.75em;
+	gap: 4px;
+}
+
+.counter span {
+	font-weight: 600;
+	color: #ff6200;
+	min-width: 16px;
+	text-align: center;
+}
+
+.counter-btn {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	color: #ffffff;
+	border: none;
+	padding: 3px 6px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 0.7em;
+	font-weight: 600;
+	transition: all 0.3s ease;
+	box-shadow: 0 2px 8px rgba(255, 98, 0, 0.3);
+}
+
+.counter-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(255, 98, 0, 0.5);
+	background: linear-gradient(135deg, #ff7300 0%, #ff5500 100%);
+}
+
+.counter-btn:active {
+	transform: translateY(0);
+}
+
+.timer {
+	color: #ffa500;
+	font-size: 0.7em;
+	font-weight: 500;
+	margin-left: 4px;
+}
+
+.dp-counter {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	background: rgba(0, 123, 255, 0.1);
+	padding: 6px 12px;
+	border-radius: 8px;
+	border: 1px solid rgba(0, 123, 255, 0.3);
+}
+
+.dp-counter label {
+	color: #007bff;
+	font-weight: 600;
+	font-size: 0.8em;
+	white-space: nowrap;
+}
+
+#dpInput {
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 6px;
+	color: #ffffff;
+	padding: 4px 8px;
+	width: 70px;
+	font-size: 0.8em;
+	text-align: center;
+}
+
+#dpInput:focus {
+	outline: none;
+	border-color: #007bff;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.summary-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px 15px;
+	background: linear-gradient(
+		135deg,
+		rgba(255, 98, 0, 0.1) 0%,
+		rgba(255, 69, 0, 0.1) 100%
+	);
+	border-radius: 10px;
+	border: 1px solid rgba(255, 98, 0, 0.3);
+	backdrop-filter: blur(5px);
+	height: auto;
+	gap: 15px;
+}
+
+.summary {
+	color: #ff6200;
+	font-weight: 700;
+	font-size: 0.8em;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#totalBP {
+	font-size: 1.1em;
+	color: #ffffff;
+	text-shadow: 0 0 10px rgba(255, 98, 0, 0.7);
+}
+
+#resetBtn {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	color: #ffffff;
+	border: none;
+	padding: 4px 8px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 0.8em;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(255, 98, 0, 0.3);
+	letter-spacing: 0.5px;
+}
+
+#resetBtn:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 6px 20px rgba(255, 98, 0, 0.5);
+	background: linear-gradient(135deg, #ff7300 0%, #ff5500 100%);
+}
+
+#resetBtn:active {
+	transform: translateY(-1px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(51, 51, 70, 0.5);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	border-radius: 3px;
+	box-shadow: 0 2px 8px rgba(255, 98, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(135deg, #ff7300 0%, #ff5500 100%);
+}
+
+/* Animation for completed tasks */
+.task input[type='checkbox']:checked + label {
+	color: #888;
+	text-decoration: line-through;
+}
+
+.task input[type='checkbox']:checked + label + .bp {
+	color: #888;
+	text-decoration: line-through;
+}
+
+/* Settings modal */
+.settings-modal {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(26, 26, 46, 0.95);
+	z-index: 100;
+	padding: 15px;
+	overflow-y: auto;
+}
+
+.settings-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.settings-header h2 {
+	color: #ff6200;
+	font-size: 1.2em;
+}
+
+.close-settings {
+	background: none;
+	border: none;
+	color: #ff6200;
+	font-size: 1.5em;
+	cursor: pointer;
+}
+
+.settings-section {
+	margin-bottom: 15px;
+}
+
+.settings-section h3 {
+	color: #ff6200;
+	margin-bottom: 10px;
+	font-size: 1em;
+}
+
+.settings-tasks {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+}
+
+.settings-task {
+	display: flex;
+	align-items: center;
+	padding: 8px;
+	background: rgba(51, 51, 70, 0.8);
+	border-radius: 8px;
+	font-size: 0.85em;
+}
+
+.settings-task input[type='checkbox'] {
+	margin-right: 8px;
+	accent-color: #ff6200;
+}
+
+/* Страница таймеров */
+.timers-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.timers-header h1 {
+	margin: 0;
+	color: #ff6200;
+}
+
+.add-timer-btn {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 10px 20px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+
+.add-timer-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(255, 98, 0, 0.4);
+}
+
+.timers-container {
+	overflow-y: auto;
+	padding-right: 5px;
+	height: 100%;
+}
+
+.timer-card {
+	background: linear-gradient(
+		135deg,
+		rgba(51, 51, 70, 0.8) 0%,
+		rgba(45, 45, 65, 0.9) 100%
+	);
+	border-radius: 12px;
+	padding: 20px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition: all 0.3s ease;
+	position: relative;
+	margin-bottom: 15px;
+}
+
+.timer-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+	border-color: rgba(255, 98, 0, 0.4);
+}
+
+.timer-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.timer-title {
+	color: #ff6200;
+	font-weight: 600;
+	font-size: 1.1em;
+	margin: 0;
+}
+
+.timer-actions {
+	display: flex;
+	gap: 5px;
+}
+
+.timer-action-btn {
+	background: none;
+	border: none;
+	color: #888;
+	cursor: pointer;
+	padding: 5px;
+	border-radius: 4px;
+	transition: all 0.3s ease;
+}
+
+.timer-action-btn:hover {
+	color: #ff6200;
+	background: rgba(255, 98, 0, 0.1);
+}
+
+.timer-display {
+	text-align: center;
+	margin: 15px 0;
+}
+
+.timer-time {
+	font-size: 2.5em;
+	font-weight: 700;
+	color: #ff6200;
+	text-shadow: 0 0 10px rgba(255, 98, 0, 0.3);
+	font-family: 'Courier New', monospace;
+}
+
+.timer-progress {
+	width: 100%;
+	height: 6px;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 3px;
+	overflow: hidden;
+	margin: 10px 0;
+}
+
+.timer-progress-bar {
+	height: 100%;
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	border-radius: 3px;
+	transition: width 1s linear;
+}
+
+.timer-controls {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+}
+
+.timer-control-btn {
+	background: rgba(255, 98, 0, 0.1);
+	border: 1px solid rgba(255, 98, 0, 0.3);
+	color: #ff6200;
+	border-radius: 6px;
+	padding: 8px 16px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	flex: 1;
+}
+
+.timer-control-btn:hover {
+	background: rgba(255, 98, 0, 0.2);
+	transform: translateY(-2px);
+}
+
+.timer-control-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.timer-control-btn.start {
+	background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+	color: white;
+	border: none;
+}
+
+.timer-control-btn.stop {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	color: white;
+	border: none;
+}
+
+.timer-control-btn.reset {
+	background: rgba(255, 255, 255, 0.1);
+	color: #e0e0e0;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Модальное окно таймера */
+.modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(26, 26, 46, 0.95);
+	z-index: 1000;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-content {
+	background: linear-gradient(
+		135deg,
+		rgba(42, 42, 62, 0.95) 0%,
+		rgba(36, 36, 56, 0.98) 100%
+	);
+	border-radius: 15px;
+	padding: 25px;
+	width: 90%;
+	max-width: 450px;
+	border: 1px solid rgba(255, 98, 0, 0.3);
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.modal-header h2 {
+	color: #ff6200;
+	margin: 0;
+	font-size: 1.3em;
+}
+
+.close-modal {
+	background: none;
+	border: none;
+	color: #ff6200;
+	font-size: 1.5em;
+	cursor: pointer;
+	padding: 5px;
+	border-radius: 4px;
+	transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+	background: rgba(255, 98, 0, 0.1);
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 8px;
+	color: #e0e0e0;
+	font-weight: 500;
+}
+
+.form-group input {
+	width: 100%;
+	padding: 12px;
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 8px;
+	color: white;
+	font-size: 1em;
+	transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+	outline: none;
+	border-color: #ff6200;
+	box-shadow: 0 0 10px rgba(255, 98, 0, 0.3);
+}
+
+.form-actions {
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+}
+
+.btn-primary {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 12px 24px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(255, 98, 0, 0.4);
+}
+
+.btn-secondary {
+	background: rgba(255, 255, 255, 0.1);
+	color: #e0e0e0;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 8px;
+	padding: 12px 24px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+	background: rgba(255, 255, 255, 0.2);
+	transform: translateY(-2px);
+}
+
+/* Анимации */
+/* @keyframes pulse {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.05);
+	}
+	100% {
+		transform: scale(1);
+	}
+} */
+
+.timer-card.running {
+	animation: pulse 2s infinite;
+}
+
+.timer-card.finished {
+	background: linear-gradient(
+		135deg,
+		rgba(255, 107, 107, 0.8) 0%,
+		rgba(255, 69, 69, 0.9) 100%
+	);
+}
+
+.no-timers {
+	text-align: center;
+	color: #888;
+	padding: 40px 20px;
+}
+
+.no-timers p {
+	margin-bottom: 10px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+	.tasks-container {
+		grid-template-columns: 1fr;
+	}
+
+	.timers-container {
+		grid-template-columns: 1fr;
+	}
+
+	.timers-header {
+		flex-direction: column;
+		gap: 15px;
+		align-items: stretch;
+	}
+
+	.timer-controls {
+		flex-direction: column;
+	}
+
+	.pagination {
+		flex-direction: column;
+	}
+
+	.toggles {
+		flex-direction: column;
+		gap: 8px;
+		align-items: center;
+	}
+
+	.container {
+		padding: 8px;
+		gap: 8px;
+	}
+
+	h1 {
+		font-size: 1.3em;
+	}
+
+	.settings-tasks {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Pulse animation for important elements */
+@keyframes summaryPulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(255, 98, 0, 0.4);
+	}
+	70% {
+		box-shadow: 0 0 0 10px rgba(255, 98, 0, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(255, 98, 0, 0);
+	}
+}
+
+.summary-container {
+	animation: summaryPulse 2s infinite;
+}
+
+/* Маленькие таймеры */
+.preset-timers,
+.user-timers {
+	margin-bottom: 25px;
+}
+
+.preset-timers h3,
+.user-timers h3 {
+	color: #ff6200;
+	margin-bottom: 15px;
+	font-size: 1.1em;
+	border-bottom: 1px solid rgba(255, 98, 0, 0.3);
+	padding-bottom: 5px;
+}
+
+.small-timers-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit);
+	gap: 12px;
+	margin-bottom: 10px;
+}
+
+.small-timer-card {
+	background: linear-gradient(
+		135deg,
+		rgba(51, 51, 70, 0.8) 0%,
+		rgba(45, 45, 65, 0.9) 100%
+	);
+	border-radius: 10px;
+	padding: 15px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	transition: all 0.3s ease;
+	position: relative;
+}
+
+.small-timer-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+	border-color: rgba(255, 98, 0, 0.4);
+}
+
+.small-timer-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.small-timer-title {
+	color: #ff6200;
+	font-weight: 600;
+	font-size: 0.9em;
+	margin: 0;
+}
+
+.small-timer-action-btn {
+	background: none;
+	border: none;
+	color: #888;
+	cursor: pointer;
+	padding: 4px;
+	border-radius: 4px;
+	transition: all 0.3s ease;
+	font-size: 0.8em;
+}
+
+.small-timer-action-btn:hover {
+	color: #ff6200;
+	background: rgba(255, 98, 0, 0.1);
+}
+
+.small-timer-display {
+	text-align: center;
+	margin: 10px 0;
+}
+
+.small-timer-time {
+	font-size: 1.3em;
+	font-weight: 700;
+	color: #ff6200;
+	text-shadow: 0 0 5px rgba(255, 98, 0, 0.3);
+	font-family: 'Courier New', monospace;
+	margin-bottom: 8px;
+}
+
+.small-timer-progress {
+	width: 100%;
+	height: 4px;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.small-timer-progress-bar {
+	height: 100%;
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	border-radius: 2px;
+	transition: width 1s linear;
+}
+
+.small-timer-controls {
+	display: flex;
+	gap: 8px;
+	justify-content: center;
+}
+
+.small-timer-control-btn {
+	background: rgba(255, 98, 0, 0.1);
+	border: 1px solid rgba(255, 98, 0, 0.3);
+	color: #ff6200;
+	border-radius: 6px;
+	padding: 6px 12px;
+	cursor: pointer;
+	font-weight: 500;
+	font-size: 0.8em;
+	transition: all 0.3s ease;
+	flex: 1;
+	text-align: center;
+}
+
+.small-timer-control-btn:hover {
+	background: rgba(255, 98, 0, 0.2);
+	transform: translateY(-1px);
+}
+
+.small-timer-control-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.small-timer-control-btn.start {
+	background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+	color: white;
+	border: none;
+}
+
+.small-timer-control-btn.stop {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	color: white;
+	border: none;
+}
+
+/* Анимации для маленьких таймеров */
+/* .small-timer-card.running {
+	animation: smallPulse 2s infinite;
+} */
+
+.small-timer-card.finished {
+	background: linear-gradient(
+		135deg,
+		rgba(255, 107, 107, 0.8) 0%,
+		rgba(255, 69, 69, 0.9) 100%
+	);
+}
+
+/* @keyframes smallPulse {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.02);
+	}
+	100% {
+		transform: scale(1);
+	}
+} */
+
+/* Адаптивность для маленьких таймеров */
+@media (max-width: 768px) {
+	.small-timers-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.small-timer-card {
+		padding: 12px;
+	}
+
+	.small-timer-time {
+		font-size: 1.1em;
+	}
+}
+
+@media (min-width: 1200px) {
+	.small-timers-grid {
+		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	}
+}
+
+.no-timers-message {
+	grid-column: 1 / -1;
+	text-align: center;
+	color: #888;
+	padding: 20px;
+	font-style: italic;
+}
+
+.no-timers-message {
+	grid-column: 1 / -1;
+	text-align: center;
+	color: #888;
+	padding: 20px;
+	font-style: italic;
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 8px;
+	margin: 10px 0;
+}
+
+/* Убедитесь, что модальное окно правильно отображается */
+.modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(26, 26, 46, 0.95);
+	z-index: 1000;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-content {
+	background: linear-gradient(
+		135deg,
+		rgba(42, 42, 62, 0.95) 0%,
+		rgba(36, 36, 56, 0.98) 100%
+	);
+	border-radius: 15px;
+	padding: 25px;
+	width: 90%;
+	max-width: 450px;
+	border: 1px solid rgba(255, 98, 0, 0.3);
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Убедитесь, что кнопки видны и кликабельны */
+.add-timer-btn {
+	background: linear-gradient(135deg, #ff6200 0%, #ff4500 100%);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 10px 20px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+
+.add-timer-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(255, 98, 0, 0.4);
+}
+
+.add-timer-btn:active {
+	transform: translateY(0);
+}

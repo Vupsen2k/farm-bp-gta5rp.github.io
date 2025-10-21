@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Список заданий для BP</title>
+		<link rel="stylesheet" href="style.css" />
+		<script src="script.js" defer></script>
+
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="favicon/android-chrome-512x512.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="favicon/favicon-32x32.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="favicon/favicon-16x16.png"
+		/>
+		<link rel="manifest" href="favicon/site.webmanifest" />
+	</head>
+	<body>
+		<div class="container">
+			<!-- Пагинация -->
+			<div class="pagination">
+				<button class="page-btn active" data-page="tasks">Задания BP</button>
+				<button class="page-btn" data-page="timers">Мои таймеры</button>
+			</div>
+
+			<!-- Страница заданий -->
+			<div class="page active" id="tasks-page">
+				<h1>Список заданий для BP</h1>
+
+				<div class="header-controls">
+					<div class="toggles">
+						<label>
+							<input type="checkbox" id="x2Server" /> x2 на сервере
+						</label>
+						<label>
+							<input type="checkbox" id="vipToggle" /> Gold/Platinum VIP
+						</label>
+					</div>
+					<button class="settings-btn" id="settingsBtn">Настройки</button>
+				</div>
+
+				<div class="tasks-container">
+					<!-- Левая колонка -->
+					<div class="task-column">
+						<div class="task-section">
+							<h2>👍 Основные задания</h2>
+							<div class="task" data-task-id="online3h">
+								<input type="checkbox" id="online3h" data-bp="2/4" />
+								<label for="online3h">3 часа в онлайне</label>
+								<span class="bp">2 BP</span>
+							</div>
+							<div class="task" data-task-id="casinoZero">
+								<input type="checkbox" id="casinoZero" data-bp="2/4" />
+								<label for="casinoZero">Нули в казино</label>
+								<span class="bp">2 BP</span>
+							</div>
+							<div class="task" data-task-id="build25">
+								<input type="checkbox" id="build25" data-bp="2/4" />
+								<label for="build25">25 действий на стройке</label>
+								<span class="bp">2 BP</span>
+							</div>
+							<div class="task" data-task-id="port25">
+								<input type="checkbox" id="port25" data-bp="2/4" />
+								<label for="port25">25 действий в порту</label>
+								<span class="bp">2 BP</span>
+							</div>
+							<div class="task" data-task-id="mine25">
+								<input type="checkbox" id="mine25" data-bp="2/4" />
+								<label for="mine25">25 действий в шахте</label>
+								<span class="bp">2 BP</span>
+							</div>
+							<div class="task" data-task-id="dance3">
+								<input type="checkbox" id="dance3" data-bp="2/4" />
+								<label for="dance3">3 победы в Дэнс Баттлах</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="danceCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="danceCounter"
+										data-target="3"
+										data-checkbox="dance3"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="bizManual">
+								<input type="checkbox" id="bizManual" data-bp="1/2" />
+								<label for="bizManual">Заказ материалов для бизнеса</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="gym20">
+								<input type="checkbox" id="gym20" data-bp="1/2" />
+								<label for="gym20">20 подходов в зале</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="shooting">
+								<input type="checkbox" id="shooting" data-bp="1/2" />
+								<label for="shooting">Тренировка в тире</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="post10">
+								<input type="checkbox" id="post10" data-bp="1/2" />
+								<label for="post10">10 посылок на почте</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="postCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="postCounter"
+										data-target="10"
+										data-checkbox="post10"
+									>
+										+1
+									</button>
+									<span class="timer" id="postTimer"></span>
+								</div>
+							</div>
+							<div class="task" data-task-id="studioRent">
+								<input type="checkbox" id="studioRent" data-bp="2/4" />
+								<label for="studioRent">Арендовать киностудию</label>
+								<span class="bp">2 BP</span>
+							</div>
+							<div class="task" data-task-id="lottery">
+								<input type="checkbox" id="lottery" data-bp="1/2" />
+								<label for="lottery">Купить лотерейный билет</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="karting">
+								<input type="checkbox" id="karting" data-bp="1/2" />
+								<label for="karting">Выиграть гонку в картинге</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="farm10">
+								<input type="checkbox" id="farm10" data-bp="1/2" />
+								<label for="farm10">10 действий на ферме</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="fire25">
+								<input type="checkbox" id="fire25" data-bp="1/2" />
+								<label for="fire25">Потушить 25 "огоньков"</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="fireCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="fireCounter"
+										data-target="25"
+										data-checkbox="fire25"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="treasure">
+								<input type="checkbox" id="treasure" data-bp="1/2" />
+								<label for="treasure">Выкопать 1 сокровище</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="streetRace">
+								<input type="checkbox" id="streetRace" data-bp="1/2" />
+								<label for="streetRace">Проехать уличную гонку</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="truck15">
+								<input type="checkbox" id="truck15" data-bp="2/4" />
+								<label for="truck15">15 заказов дальнобойщиком</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="truckCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="truckCounter"
+										data-target="15"
+										data-checkbox="truck15"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="surgeon2">
+								<input type="checkbox" id="surgeon2" data-bp="2/4" />
+								<label for="surgeon2">2 смены внешности</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="surgeonCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="surgeonCounter"
+										data-target="2"
+										data-checkbox="surgeon2"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="cinema5">
+								<input type="checkbox" id="cinema5" data-bp="1/2" />
+								<label for="cinema5">5 видео в кинотеатре</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="training5">
+								<input type="checkbox" id="training5" data-bp="1/2" />
+								<label for="training5"
+									>5 игр в тренажерном комплексе (от 100$)</label
+								>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="trainingCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="trainingCounter"
+										data-target="5"
+										data-checkbox="training5"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="arena3">
+								<input type="checkbox" id="arena3" data-bp="1/2" />
+								<label for="arena3">3 игры на арене (от 100$)</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="arenaCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="arenaCounter"
+										data-target="3"
+										data-checkbox="arena3"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="bus2">
+								<input type="checkbox" id="bus2" data-bp="2/4" />
+								<label for="bus2">2 круга автобусника</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="busCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="busCounter"
+										data-target="2"
+										data-checkbox="bus2"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="hunt5">
+								<input type="checkbox" id="hunt5" data-bp="2/4" />
+								<label for="hunt5">5 шкур животных</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="huntCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="huntCounter"
+										data-target="5"
+										data-checkbox="hunt5"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Правая колонка -->
+					<div class="task-column">
+						<div class="task-section">
+							<h2>🚓 Фракционные задания</h2>
+							<div class="task" data-task-id="graffiti7">
+								<input type="checkbox" id="graffiti7" data-bp="1/2" />
+								<label for="graffiti7">7 граффити</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="graffitiCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="graffitiCounter"
+										data-target="7"
+										data-checkbox="graffiti7"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="contraband5">
+								<input type="checkbox" id="contraband5" data-bp="2/4" />
+								<label for="contraband5">5 контрабанды</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="contrabandCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="contrabandCounter"
+										data-target="5"
+										data-checkbox="contraband5"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="captures">
+								<input type="checkbox" id="captures" data-bp="1/2" />
+								<label for="captures">Участие в каптах/бизварах</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="hammer">
+								<input type="checkbox" id="hammer" data-bp="3/6" />
+								<label for="hammer">Сдать Хаммер с ВЗХ</label>
+								<span class="bp">3 BP</span>
+							</div>
+							<div class="task" data-task-id="medcard5">
+								<input type="checkbox" id="medcard5" data-bp="2/4" />
+								<label for="medcard5">5 медкарт в EMS</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="medcardCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="medcardCounter"
+										data-target="5"
+										data-checkbox="medcard5"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="ems15">
+								<input type="checkbox" id="ems15" data-bp="2/4" />
+								<label for="ems15">15 вызовов в EMS</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="emsCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="emsCounter"
+										data-target="15"
+										data-checkbox="ems15"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="wn40">
+								<input type="checkbox" id="wn40" data-bp="2/4" />
+								<label for="wn40">40 объявлений в WN</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="wnCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="wnCounter"
+										data-target="40"
+										data-checkbox="wn40"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="locks15">
+								<input type="checkbox" id="locks15" data-bp="2/4" />
+								<label for="locks15">15 взломов замков</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="locksCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="locksCounter"
+										data-target="15"
+										data-checkbox="locks15"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="codes5">
+								<input type="checkbox" id="codes5" data-bp="2/4" />
+								<label for="codes5">5 закрытых кодов</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="codesCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="codesCounter"
+										data-target="5"
+										data-checkbox="codes5"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="register2">
+								<input type="checkbox" id="register2" data-bp="1/2" />
+								<label for="register2">2 авто на учет</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="registerCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="registerCounter"
+										data-target="2"
+										data-checkbox="register2"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="arrest1">
+								<input type="checkbox" id="arrest1" data-bp="1/2" />
+								<label for="arrest1">1 арест в КПЗ</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="bail2">
+								<input type="checkbox" id="bail2" data-bp="2/4" />
+								<label for="bail2">Выкупить 2 человек из КПЗ</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="bailCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="bailCounter"
+										data-target="2"
+										data-checkbox="bail2"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="task-section">
+							<h2>🎮 Дополнительные задания</h2>
+							<div class="task" data-task-id="browserSite">
+								<input type="checkbox" id="browserSite" data-bp="1/2" />
+								<label for="browserSite">Посетить любой сайт в браузере</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="brawlChannel">
+								<input type="checkbox" id="brawlChannel" data-bp="1/2" />
+								<label for="brawlChannel">Зайти в любой канал в Brawl</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="matchLike">
+								<input type="checkbox" id="matchLike" data-bp="1/2" />
+								<label for="matchLike"
+									>Поставить лайк любой анкете в Match</label
+								>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="caseSpin">
+								<input type="checkbox" id="caseSpin" data-bp="10/20" />
+								<label for="caseSpin"
+									>Прокрутить за DP серебрянный или золотой кейс</label
+								>
+								<span class="bp">10 BP</span>
+							</div>
+							<div class="task" data-task-id="petBall15">
+								<input type="checkbox" id="petBall15" data-bp="2/4" />
+								<label for="petBall15">Кинуть мяч питомцу 15 раз</label>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="petBallCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="petBallCounter"
+										data-target="15"
+										data-checkbox="petBall15"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="petCommands15">
+								<input type="checkbox" id="petCommands15" data-bp="2/4" />
+								<label for="petCommands15"
+									>15 выполненных питомцем команд</label
+								>
+								<span class="bp">2 BP</span>
+								<div class="counter">
+									<span id="petCommandsCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="petCommandsCounter"
+										data-target="15"
+										data-checkbox="petCommands15"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="casinoWheel">
+								<input type="checkbox" id="casinoWheel" data-bp="3/6" />
+								<label for="casinoWheel"
+									>Ставка в колесе удачи в казино (межсерверное колесо)</label
+								>
+								<span class="bp">3 BP</span>
+							</div>
+							<div class="task" data-task-id="metroStation">
+								<input type="checkbox" id="metroStation" data-bp="2/4" />
+								<label for="metroStation">Проехать 1 станцию на метро</label>
+								<span class="bp">2 BP</span>
+							</div>
+							<div class="task" data-task-id="fishing20">
+								<input type="checkbox" id="fishing20" data-bp="4/8" />
+								<label for="fishing20">Поймать 20 рыб</label>
+								<span class="bp">4 BP</span>
+								<div class="counter">
+									<span id="fishingCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="fishingCounter"
+										data-target="20"
+										data-checkbox="fishing20"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="clubQuests2">
+								<input type="checkbox" id="clubQuests2" data-bp="4/8" />
+								<label for="clubQuests2">Выполнить 2 квеста любых клубов</label>
+								<span class="bp">4 BP</span>
+								<div class="counter">
+									<span id="clubQuestsCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="clubQuestsCounter"
+										data-target="2"
+										data-checkbox="clubQuests2"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="carRepair">
+								<input type="checkbox" id="carRepair" data-bp="1/2" />
+								<label for="carRepair">Починить деталь в автосервисе</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="basketball2">
+								<input type="checkbox" id="basketball2" data-bp="1/2" />
+								<label for="basketball2">Забросить 2 мяча в баскетболе</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="basketballCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="basketballCounter"
+										data-target="2"
+										data-checkbox="basketball2"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="football2">
+								<input type="checkbox" id="football2" data-bp="1/2" />
+								<label for="football2">Забить 2 гола в футболе</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="footballCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="footballCounter"
+										data-target="2"
+										data-checkbox="football2"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="armwrestling">
+								<input type="checkbox" id="armwrestling" data-bp="1/2" />
+								<label for="armwrestling">Победить в армрестлинге</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="darts">
+								<input type="checkbox" id="darts" data-bp="1/2" />
+								<label for="darts">Победить в дартс</label>
+								<span class="bp">1 BP</span>
+							</div>
+							<div class="task" data-task-id="volleyball10">
+								<input type="checkbox" id="volleyball10" data-bp="1/2" />
+								<label for="volleyball10">Забить 10 голов в волейболе</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="volleyballCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="volleyballCounter"
+										data-target="10"
+										data-checkbox="volleyball10"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="tableTennis10">
+								<input type="checkbox" id="tableTennis10" data-bp="1/2" />
+								<label for="tableTennis10"
+									>Набрать 10 очков в настольном теннисе</label
+								>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="tableTennisCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="tableTennisCounter"
+										data-target="10"
+										data-checkbox="tableTennis10"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="tennis10">
+								<input type="checkbox" id="tennis10" data-bp="1/2" />
+								<label for="tennis10">Набрать 10 очков в большом теннисе</label>
+								<span class="bp">1 BP</span>
+								<div class="counter">
+									<span id="tennisCounter">0</span>
+									<button
+										class="counter-btn"
+										data-counter="tennisCounter"
+										data-target="10"
+										data-checkbox="tennis10"
+									>
+										+1
+									</button>
+								</div>
+							</div>
+							<div class="task" data-task-id="mafia">
+								<input type="checkbox" id="mafia" data-bp="3/6" />
+								<label for="mafia">Сыграть в мафию</label>
+								<span class="bp">3 BP</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="summary-container">
+					<div class="dp-counter">
+						<label for="dpInput">BP получено:</label>
+						<input type="number" id="dpInput" value="0" min="0" />
+					</div>
+					<div class="summary">
+						Общее количество BP: <span id="totalBP">0</span>
+					</div>
+					<button id="resetBtn">Сбросить все</button>
+				</div>
+			</div>
+
+			<!-- Страница таймеров -->
+			<div class="page" id="timers-page">
+				<div class="timers-header">
+					<h1>Мои таймеры</h1>
+					<button class="add-timer-btn" id="addTimerBtn">
+						+ Добавить таймер
+					</button>
+				</div>
+
+				<div class="timers-container" id="timersContainer">
+					<!-- Предустановленные таймеры -->
+					<div class="preset-timers">
+						<h3>Стандартные таймеры</h3>
+						<div class="small-timers-grid">
+							<div class="small-timer-card" data-timer-id="post">
+								<div class="small-timer-header">
+									<h4 class="small-timer-title">📮 Почта</h4>
+									<button
+										class="small-timer-action-btn restart-timer"
+										title="Перезапустить"
+									>
+										↻
+									</button>
+								</div>
+								<div class="small-timer-display">
+									<div class="small-timer-time">10:00</div>
+									<div class="small-timer-progress">
+										<div class="small-timer-progress-bar"></div>
+									</div>
+								</div>
+								<div class="small-timer-controls">
+									<button class="small-timer-control-btn start">Старт</button>
+								</div>
+							</div>
+
+							<div class="small-timer-card" data-timer-id="carTheft">
+								<div class="small-timer-header">
+									<h4 class="small-timer-title">🚗 Угон авто</h4>
+									<button
+										class="small-timer-action-btn restart-timer"
+										title="Перезапустить"
+									>
+										↻
+									</button>
+								</div>
+								<div class="small-timer-display">
+									<div class="small-timer-time">01:30:00</div>
+									<div class="small-timer-progress">
+										<div class="small-timer-progress-bar"></div>
+									</div>
+								</div>
+								<div class="small-timer-controls">
+									<button class="small-timer-control-btn start">Старт</button>
+								</div>
+							</div>
+
+							<div class="small-timer-card" data-timer-id="pimping">
+								<div class="small-timer-header">
+									<h4 class="small-timer-title">💃 Сутенерка</h4>
+									<button
+										class="small-timer-action-btn restart-timer"
+										title="Перезапустить"
+									>
+										↻
+									</button>
+								</div>
+								<div class="small-timer-display">
+									<div class="small-timer-time">01:30:00</div>
+									<div class="small-timer-progress">
+										<div class="small-timer-progress-bar"></div>
+									</div>
+								</div>
+								<div class="small-timer-controls">
+									<button class="small-timer-control-btn start">Старт</button>
+								</div>
+							</div>
+
+							<div class="small-timer-card" data-timer-id="club">
+								<div class="small-timer-header">
+									<h4 class="small-timer-title">🎵 Клуб</h4>
+									<button
+										class="small-timer-action-btn restart-timer"
+										title="Перезапустить"
+									>
+										↻
+									</button>
+								</div>
+								<div class="small-timer-display">
+									<div class="small-timer-time">02:00:00</div>
+									<div class="small-timer-progress">
+										<div class="small-timer-progress-bar"></div>
+									</div>
+								</div>
+								<div class="small-timer-controls">
+									<button class="small-timer-control-btn start">Старт</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Пользовательские таймеры -->
+					<div class="user-timers">
+						<h3>Мои пользовательские таймеры</h3>
+						<div class="small-timers-grid" id="userTimersGrid">
+							<!-- Пользовательские таймеры будут добавляться сюда -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Модальное окно настроек заданий -->
+			<div class="settings-modal" id="settingsModal">
+				<div class="settings-header">
+					<h2>Настройки отображения задач</h2>
+					<button class="close-settings" id="closeSettings">×</button>
+				</div>
+
+				<div class="settings-section">
+					<h3>Основные задания</h3>
+					<div class="settings-tasks" id="mainTasksSettings">
+						<!-- Заполняется JavaScript -->
+					</div>
+				</div>
+
+				<div class="settings-section">
+					<h3>Фракционные задания</h3>
+					<div class="settings-tasks" id="fractionTasksSettings">
+						<!-- Заполняется JavaScript -->
+					</div>
+				</div>
+
+				<div class="settings-section">
+					<h3>Дополнительные задания</h3>
+					<div class="settings-tasks" id="additionalTasksSettings">
+						<!-- Заполняется JavaScript -->
+					</div>
+				</div>
+			</div>
+
+			<!-- Модальное окно создания таймера -->
+			<div class="modal" id="timerModal">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h2>Создать новый таймер</h2>
+						<button class="close-modal" id="closeTimerModal">×</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="timerName">Название таймера:</label>
+							<input
+								type="text"
+								id="timerName"
+								placeholder="Например: Перезарядка бизнеса"
+								maxlength="50"
+							/>
+						</div>
+						<div class="form-group">
+							<label for="timerDuration">Длительность (минуты):</label>
+							<input
+								type="number"
+								id="timerDuration"
+								min="1"
+								max="1440"
+								value="60"
+							/>
+						</div>
+						<div class="form-actions">
+							<button class="btn-secondary" id="cancelTimerBtn">Отмена</button>
+							<button class="btn-primary" id="saveTimerBtn">
+								Создать таймер
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
