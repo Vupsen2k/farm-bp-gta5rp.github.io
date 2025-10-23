@@ -122,7 +122,26 @@ document.addEventListener('DOMContentLoaded', () => {
 	function loadProgress() {
 		if (shouldReset()) {
 			console.log('Auto-reset at 7:00 MSK')
+			
+			// Сохраняем важные данные перед сбросом
+			const savedData = localStorage.getItem('bpProgress')
+			let savedHiddenTasks = []
+			let savedDP = 0
+			
+			if (savedData) {
+				try {
+					const { hiddenTasks: savedHT, dp } = JSON.parse(savedData)
+					savedHiddenTasks = savedHT || []
+					savedDP = dp || 0
+				} catch (e) {
+					console.error('Error parsing saved data during reset:', e)
+				}
+			}
+			
+			// Удаляем старые данные
 			localStorage.removeItem('bpProgress')
+			
+			// Сбрасываем счетчики и чекбоксы
 			counterButtons.forEach(btn => {
 				const counterId = btn.dataset.counter
 				// Reset ALL counters including online3h on auto-reset
@@ -136,11 +155,21 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (checkbox.id !== 'online3h') {
 					checkbox.checked = false
 				}
-			})
+			});
+			
 			x2ServerToggle.checked = false
 			vipToggle.checked = false
+			
+			// ВОССТАНАВЛИВАЕМ скрытые задания и DP
 			hiddenTasks.clear()
-			dpInput.value = 0
+			savedHiddenTasks.forEach(taskId => {
+				hiddenTasks.add(taskId)
+			})
+			dpInput.value = savedDP
+			
+			// Сохраняем обновленные данные
+			saveProgress()
+			updateTaskVisibility()
 			return
 		}
 
