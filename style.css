@@ -787,19 +787,6 @@ h1 {
 	transform: translateY(-2px);
 }
 
-/* Анимации */
-/* @keyframes pulse {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(1.05);
-	}
-	100% {
-		transform: scale(1);
-	}
-} */
-
 .timer-card.running {
 	animation: pulse 2s infinite;
 }
@@ -820,50 +807,6 @@ h1 {
 
 .no-timers p {
 	margin-bottom: 10px;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-	.tasks-container {
-		grid-template-columns: 1fr;
-	}
-
-	.timers-container {
-		grid-template-columns: 1fr;
-	}
-
-	.timers-header {
-		flex-direction: column;
-		gap: 15px;
-		align-items: stretch;
-	}
-
-	.timer-controls {
-		flex-direction: column;
-	}
-
-	.pagination {
-		flex-direction: column;
-	}
-
-	.toggles {
-		flex-direction: column;
-		gap: 8px;
-		align-items: center;
-	}
-
-	.container {
-		padding: 8px;
-		gap: 8px;
-	}
-
-	h1 {
-		font-size: 1.3em;
-	}
-
-	.settings-tasks {
-		grid-template-columns: 1fr;
-	}
 }
 
 /* Pulse animation for important elements */
@@ -1025,12 +968,6 @@ h1 {
 	color: white;
 	border: none;
 }
-
-/* Анимации для маленьких таймеров */
-/* .small-timer-card.running {
-	animation: smallPulse 2s infinite;
-} */
-
 .small-timer-card.finished {
 	background: linear-gradient(
 		135deg,
@@ -1038,18 +975,6 @@ h1 {
 		rgba(255, 69, 69, 0.9) 100%
 	);
 }
-
-/* @keyframes smallPulse {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(1.02);
-	}
-	100% {
-		transform: scale(1);
-	}
-} */
 
 /* Адаптивность для маленьких таймеров */
 @media (max-width: 768px) {
@@ -1138,4 +1063,58 @@ h1 {
 
 .add-timer-btn:active {
 	transform: translateY(0);
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+.form-group select,
+.form-group input {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+	outline: none;
+	border-color: #4caf50;
+}
+
+#customNameGroup,
+#customDurationGroup {
+	margin-top: 10px;
+}
+
+/* Стили для кнопки перезапуска */
+.small-timer-control-btn.reset {
+	background-color: #ff9800;
+}
+
+.small-timer-control-btn.reset:hover {
+	background-color: #f57c00;
+}
+
+/* Улучшенные стили для таймеров */
+.small-timer-card.running {
+	border-color: #4caf50;
+	box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.small-timer-card.finished {
+	border-color: #f44336;
+	background-color: #ffebee;
+}
+
+.small-timer-card.finished .small-timer-title {
+	color: #d32f2f;
 }
