@@ -29,8 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	const closeTimerModal = document.getElementById('closeTimerModal')
 	const cancelTimerBtn = document.getElementById('cancelTimerBtn')
 	const saveTimerBtn = document.getElementById('saveTimerBtn')
-	const timerNameInput = document.getElementById('timerName')
-	const timerDurationInput = document.getElementById('timerDuration')
+	const timerNameSelect = document.getElementById('timerNameSelect')
+	const timerNameCustom = document.getElementById('timerNameCustom')
+	const timerDurationSelect = document.getElementById('timerDurationSelect')
+	const timerDurationCustom = document.getElementById('timerDurationCustom')
+	const customNameGroup = document.getElementById('customNameGroup')
+	const customDurationGroup = document.getElementById('customDurationGroup')
 	const timersContainer = document.getElementById('timersContainer')
 
 	// State
@@ -114,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	// Load progress from localStorage
 	// Load progress from localStorage
 	function loadProgress() {
 		if (shouldReset()) {
@@ -227,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// Update total BP count
-	// Update total BP count
 	function updateTotalBP() {
 		let totalBP = 0
 		const isVIP = vipToggle.checked
@@ -253,7 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		saveProgress()
 	}
 
-	// Update BP displays for all tasks
 	// Update BP displays for all tasks
 	function updateBPDisplays() {
 		const isVIP = vipToggle.checked
@@ -585,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
                 ${
 									!isPreset
-										? `<button class="small-timer-control-btn reset">Сброс</button>`
+										? `<button class="small-timer-control-btn reset">Перезапуск</button>`
 										: ''
 								}
             </div>
@@ -651,12 +652,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			})
 		})
 
-		// Кнопки сброса для пользовательских таймеров
+		// Кнопки сброса для пользовательских таймеров - теперь перезапускают
 		document.querySelectorAll('.small-timer-control-btn.reset').forEach(btn => {
 			btn.addEventListener('click', function () {
 				const timerCard = this.closest('.small-timer-card')
 				const timerId = timerCard.dataset.timerId
-				resetUserTimer(timerId)
+				resetAndRestartTimer(timerId)
 			})
 		})
 
@@ -778,13 +779,15 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	// Сброс пользовательского таймера
-	function resetUserTimer(timerId) {
+	// Сброс и перезапуск пользовательского таймера
+	function resetAndRestartTimer(timerId) {
 		pauseUserTimer(timerId)
 		const timer = userTimers.find(t => t.id === timerId)
 		if (timer) {
 			timer.currentTime = timer.totalTime
 			updateTimerDisplay(timerId)
+			// АВТОМАТИЧЕСКИ ЗАПУСКАЕМ ТАЙМЕР ПОСЛЕ СБРОСА
+			startUserTimer(timerId, timer)
 			saveTimersToStorage()
 		}
 	}
@@ -939,13 +942,54 @@ document.addEventListener('DOMContentLoaded', () => {
 		renderTimers()
 	}
 
-	// Создание нового таймера
-	function createNewTimer() {
-		const name = timerNameInput.value.trim()
-		const duration = parseInt(timerDurationInput.value)
+	// Инициализация модального окна создания таймера
+	function initializeTimerModal() {
+		// Обработчики для переключения между предустановками и кастомным вводом
+		timerNameSelect.addEventListener('change', function () {
+			if (this.value === 'custom') {
+				customNameGroup.style.display = 'block'
+				timerNameCustom.focus()
+			} else {
+				customNameGroup.style.display = 'none'
+				timerNameCustom.value = ''
+			}
+		})
 
-		if (!name) {
-			alert('Пожалуйста, введите название таймера')
+		timerDurationSelect.addEventListener('change', function () {
+			if (this.value === 'custom') {
+				customDurationGroup.style.display = 'block'
+				timerDurationCustom.focus()
+			} else {
+				customDurationGroup.style.display = 'none'
+				timerDurationCustom.value = ''
+			}
+		})
+	}
+
+	// Создание нового таймера с автозапуском
+	function createNewTimer() {
+		let name, duration
+
+		// Получаем название таймера
+		if (timerNameSelect.value === 'custom' && timerNameCustom.value.trim()) {
+			name = timerNameCustom.value.trim()
+		} else if (
+			timerNameSelect.value !== 'custom' &&
+			timerNameSelect.value !== ''
+		) {
+			name = timerNameSelect.value
+		} else {
+			alert('Пожалуйста, введите название таймера или выберите из списка')
+			return
+		}
+
+		// Получаем длительность таймера
+		if (timerDurationSelect.value === 'custom' && timerDurationCustom.value) {
+			duration = parseInt(timerDurationCustom.value)
+		} else if (timerDurationSelect.value !== 'custom') {
+			duration = parseInt(timerDurationSelect.value)
+		} else {
+			alert('Пожалуйста, выберите длительность таймера')
 			return
 		}
 
@@ -965,13 +1009,21 @@ document.addEventListener('DOMContentLoaded', () => {
 		userTimers.push(newTimer)
 		saveTimersToStorage()
 		renderTimers()
+
+		// АВТОМАТИЧЕСКИ ЗАПУСКАЕМ ТАЙМЕР ПОСЛЕ СОЗДАНИЯ
+		startUserTimer(newTimer.id, newTimer)
+
 		closeTimerModalFunc()
 	}
 
 	function closeTimerModalFunc() {
 		timerModal.style.display = 'none'
-		timerNameInput.value = ''
-		timerDurationInput.value = '60'
+		timerNameSelect.value = ''
+		timerNameCustom.value = ''
+		timerDurationSelect.value = '60'
+		timerDurationCustom.value = ''
+		customNameGroup.style.display = 'none'
+		customDurationGroup.style.display = 'none'
 	}
 
 	function requestNotificationPermission() {
@@ -1102,6 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function initializeTimers() {
 		requestNotificationPermission()
 		loadTimersFromStorage()
+		initializeTimerModal()
 
 		// Обработчики для кнопки добавления таймера
 		if (addTimerBtn) {
@@ -1131,8 +1184,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			})
 		}
 
-		if (timerNameInput) {
-			timerNameInput.addEventListener('keypress', e => {
+		if (timerNameCustom) {
+			timerNameCustom.addEventListener('keypress', e => {
 				if (e.key === 'Enter') {
 					createNewTimer()
 				}
